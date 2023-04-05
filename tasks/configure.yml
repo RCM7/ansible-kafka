@@ -12,6 +12,20 @@
     mode: 0644
   notify:
     - Restart kafka service
+  when: not kafka_use_kraft
+  tags:
+    - kafka_config
+
+- name: Template kraft configuration file to server.properties
+  template:
+    src: kraft-server.properties.j2
+    dest: '{{ kafka_dir }}/config/kraft/server.properties'
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+    mode: 0644
+  notify:
+    - Restart kafka service
+  when: kafka_use_kraft
   tags:
     - kafka_config
 
@@ -22,6 +36,7 @@
     group: '{{ kafka_group }}'
     owner: '{{ kafka_user }}'
     mode: 0644
+  when: not kafka_use_kraft
   tags:
     - kafka_config
 
@@ -77,11 +92,23 @@
 
 - name: Create symlink to kafka server properties file
   file:
+    src: '{{ kafka_dir }}/config/kraft/server.properties'
+    dest: /etc/kafka/server.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  when: not kafka_use_kraft
+  tags:
+    - kafka_config
+
+- name: Create symlink to kafka server properties file
+  file:
     src: '{{ kafka_dir }}/config/server.properties'
     dest: /etc/kafka/server.properties
     state: link
     group: '{{ kafka_group }}'
     owner: '{{ kafka_user }}'
+  when: kafka_use_kraft
   tags:
     - kafka_config
 

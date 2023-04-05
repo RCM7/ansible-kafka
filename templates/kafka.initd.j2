@@ -18,9 +18,15 @@ LOCKFILE=/var/lock/subsys/$prog
 # shellcheck disable=SC1083
 KAFKA_HOME_DIR={{ kafka_dir }}
 
+{% if kafka_use_kraft %}
+KAFKA_SERVER_PROPERTIES_PATH="$KAFKA_HOME_DIR/config/kraft/server.properties"
+{% else %}
+KAFKA_SERVER_PROPERTIES_PATH="$KAFKA_HOME_DIR/config/server.properties"
+{% endif %}
+
 start() {
         echo -n "Starting $prog: "
-        "$KAFKA_HOME_DIR/bin/kafka-start-server.sh" "$KAFKA_HOME_DIR/config/server.properties"
+        "$KAFKA_HOME_DIR/bin/kafka-start-server.sh" "$KAFKA_SERVER_PROPERTIES_PATH"
         RETVAL=$?
         [ $RETVAL -eq 0 ] && touch $LOCKFILE
         echo

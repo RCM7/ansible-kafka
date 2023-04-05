@@ -22,6 +22,8 @@ kafka_start: yes
 # Restart kafka on configuration change
 kafka_restart: yes
 
+# Whether to use kraft or zookeeper for cluster quorum
+kafka_use_kraft: no
 ############################# Server #############################
 
 # The id of the broker. This must be set to a unique integer for each broker.
@@ -40,8 +42,11 @@ kafka_background_threads: 10
 #   EXAMPLE:
 #     listeners = PLAINTEXT://your.host.name:9092
 #listeners=PLAINTEXT://:9092
-kafka_listeners:
-  - "PLAINTEXT://:9092"
+kafka_listeners: "\
+  - 'PLAINTEXT://:9092'
+{% if kafka_use_kraft %}
+  - 'CONTROLLER://:9093'
+{% endif %}"
 
 # Hostname and port the broker will advertise to producers and consumers. If not set,
 # it uses the value for "listeners" if configured.  Otherwise, it will use the value
@@ -50,6 +55,14 @@ kafka_listeners:
 # kafka_advertised_listeners:
 #   - "SASL_SSL://:9094"
 #   - "PLAINTEXT://:9092"
+
+# A comma-separated list of the names of the listeners used by the controller.
+# If no explicit mapping set in `listener.security.protocol.map`, default will be using PLAINTEXT protocol
+# This is required if running in KRaft mode.
+kafka_controller_listener_names: "\
+{% if kafka_use_kraft %}
+  - 'CONTROLLER'
+{% endif %}"
 
 # The number of threads handling network requests
 kafka_num_network_threads: 3
@@ -109,6 +122,14 @@ kafka_delete_topic_enable: true
 kafka_default_replication_factor: 1
 
 kafka_group_initial_rebalance_delay_ms: 0
+
+############################# Kraft #################################
+
+# Name of listener used for communication between brokers.
+kafka_inter_broker_listener_name: "PLAINTEXT"
+
+# The connect string for the controller quorum
+kafka_controller_quorum_voters: "1@localhost:9093"
 
 ############################# Zookeeper #############################
 
