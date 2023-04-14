@@ -90,14 +90,14 @@
   tags:
     - kafka_config
 
-- name: Create symlink to kafka server properties file
+- name: Create symlink to kafka kraft server properties file
   file:
     src: '{{ kafka_dir }}/config/kraft/server.properties'
     dest: /etc/kafka/server.properties
     state: link
     group: '{{ kafka_group }}'
     owner: '{{ kafka_user }}'
-  when: not kafka_use_kraft
+  when: kafka_use_kraft
   tags:
     - kafka_config
 
@@ -108,7 +108,7 @@
     state: link
     group: '{{ kafka_group }}'
     owner: '{{ kafka_user }}'
-  when: kafka_use_kraft
+  when: not kafka_use_kraft
   tags:
     - kafka_config
 
