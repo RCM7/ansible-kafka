@@ -24,6 +24,7 @@ kafka_restart: yes
 
 # Whether to use kraft or zookeeper for cluster quorum
 kafka_use_kraft: no
+kafka_process_roles: broker
 ############################# Server #############################
 
 # The id of the broker. This must be set to a unique integer for each broker.

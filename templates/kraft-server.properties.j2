@@ -23,7 +23,7 @@
 ############################# Server Basics #############################
 
 # The role of this server. Setting this puts us in KRaft mode
-process.roles=broker,controller
+process.roles={{ kafka_process_roles }}
 
 # The node id associated with this instance's roles
 node.id={{ kafka_node_id }}
