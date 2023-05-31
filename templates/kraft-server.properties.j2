@@ -28,6 +28,9 @@ process.roles={{ kafka_process_roles }}
 # The node id associated with this instance's roles
 node.id={{ kafka_node_id }}
 
+# Enable auto creation of topic on the server
+auto.create.topics.enable={{ kafka_auto_create_topics_enable }}
+
 # The connect string for the controller quorum
 controller.quorum.voters={{ kafka_controller_quorum_voters }}
 
